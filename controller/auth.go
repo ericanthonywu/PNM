@@ -24,10 +24,36 @@ func Login(c echo.Context) (err error) {
 
 	db := model.InitDB()
 
-	if err := squirrel.Select("user_id", "username", "password").
+	if err := squirrel.Select("user_id", 
+				"username", 
+				"password",
+				"email",
+				"phone",
+				"COALESCE(device,'')",
+				"COALESCE(os,'')",
+				"COALESCE(device_token,'')",
+				"mst_user.position_id",
+				"rep.position_name",
+				"mst_user.division_id",
+				"red.division_name",
+		).
 		From("mst_user").
 		Where(squirrel.Eq{"username": request.Username}).
-		RunWith(db).QueryRow().Scan(&user.Id, &user.Username, &user.Password); err != nil {
+		LeftJoin("ref_employee_division red on mst_user.division_id = red.division_id").
+		LeftJoin("ref_employee_position rep on mst_user.position_id = rep.position_id").
+		RunWith(db).QueryRow().Scan(
+			&user.Id, 
+			&user.Username, 
+			&user.Password,
+			&user.Email,
+			&user.Phone,
+			&user.Device,
+			&user.Os,
+			&user.DeviceToken,
+			&user.PositionId,
+			&user.Position,
+			&user.DivisionId,
+			&user.Division); err != nil {
 		return err
 	}
 
@@ -49,6 +75,7 @@ func Login(c echo.Context) (err error) {
 	}
 
 	return c.JSON(http.StatusOK, model.DefaultResponse{
+		// Status: 1,
 		Message: "Login Berhasil",
 		Data: model.CustomResponse{
 			"token": t,
