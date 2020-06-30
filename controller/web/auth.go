@@ -1,4 +1,4 @@
-package controller
+package web
 
 import (
 	"PNM/model"
@@ -24,8 +24,8 @@ func Login(c echo.Context) (err error) {
 
 	db := model.InitDB()
 
-	if err := squirrel.Select("user_id", 
-				"username", 
+	if err := squirrel.Select("user_id",
+				"username",
 				"password",
 				"email",
 				"phone",
@@ -42,8 +42,8 @@ func Login(c echo.Context) (err error) {
 		LeftJoin("ref_employee_division red on mst_user.division_id = red.division_id").
 		LeftJoin("ref_employee_position rep on mst_user.position_id = rep.position_id").
 		RunWith(db).QueryRow().Scan(
-			&user.Id, 
-			&user.Username, 
+			&user.Id,
+			&user.Username,
 			&user.Password,
 			&user.Email,
 			&user.Phone,

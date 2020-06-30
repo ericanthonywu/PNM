@@ -1,8 +1,9 @@
 package main
 
 import (
-	"PNM/controller"
-	"PNM/controller/crud"
+	"PNM/controller/mobile"
+	"PNM/controller/web"
+	"PNM/controller/web/crud"
 	"PNM/model"
 	"fmt"
 	"github.com/joho/godotenv"
@@ -59,10 +60,10 @@ func main() {
 		_ = c.JSON(code, model.ErrorResponse{Message: message})
 	}
 
-	e.GET("/migrate", controller.Migrate)
+	e.GET("/migrate", web.Migrate)
 
 	user := e.Group("/auth")
-	user.POST("/login", controller.Login)
+	user.POST("/login", web.Login)
 
 	api := e.Group("/api")
 
@@ -127,6 +128,12 @@ func main() {
 
 	// List assigned user
 	api.POST("/addAssignedUser", crud.AddRecipient)
+
+	mobileApi := e.Group("/mobile")
+	mobileApi.POST("/getAllPendingList", mobile.GetAllPendingList)
+	mobileApi.POST("/getHistory", mobile.GetHistory)
+	mobileApi.POST("/getDocsById", mobile.GetDocsById)
+	mobileApi.POST("/submitSignature", mobile.SubmitSignature)
 
 	// middleware for SSO custom
 	//

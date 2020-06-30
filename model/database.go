@@ -23,7 +23,7 @@ func InitDB() *sql.DB {
 	return db
 }
 
-func InsertImage(header *multipart.FileHeader, dest string) (string, error) {
+func InsertImage(header *multipart.FileHeader, dest string, filename string) (string, error) {
 
 	var (
 		_, b, _, _ = runtime.Caller(0)
@@ -39,7 +39,10 @@ func InsertImage(header *multipart.FileHeader, dest string) (string, error) {
 
 	randoms := random.New()
 
-	filename := time.Now().Format(time.RFC3339Nano) + randoms.String(30, random.Alphanumeric) + header.Filename
+	if filename == "" {
+		filename = time.Now().Format(time.RFC3339Nano) + randoms.String(30, random.Alphanumeric) + header.Filename
+
+	}
 
 	dst, err := os.Create(dest + filename)
 	if err != nil {

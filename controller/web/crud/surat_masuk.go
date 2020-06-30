@@ -89,14 +89,14 @@ func EditSuratMasuk(c echo.Context) (err error) {
 	}
 	if suratAttachmentCheckFile {
 		fmt.Println("Masuk2")
-		suratAttachmentFilename, err := model.InsertImage(suratAttachment, "uploads/surat_attachment/")
+		suratAttachmentFilename, err := model.InsertImage(suratAttachment, "uploads/surat_attachment/","")
 		if err != nil {
 			return err
 		}
 		Query = Query.Set("surat_attachment", suratAttachmentFilename)
 	}
 	if suratAttachmentReplyCheckFile {
-		suratAttachmentReplyFilename, err := model.InsertImage(suratAttachmentReply, "uploads/surat_attachment_reply/")
+		suratAttachmentReplyFilename, err := model.InsertImage(suratAttachmentReply, "uploads/surat_attachment_reply/","")
 		if err != nil {
 			return err
 		}

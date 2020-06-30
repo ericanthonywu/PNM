@@ -1,6 +1,10 @@
 package model
 
-import "database/sql"
+import (
+	"database/sql"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/labstack/echo/v4"
+)
 
 type (
 	Login struct {
@@ -65,3 +69,16 @@ type (
 		Sender         sql.NullInt64  `json:"sender"`
 	}
 )
+
+func GetJWTId(c echo.Context) string {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	id := claims["id"].(string)
+	return id
+}
+func GetJWTName(c echo.Context) string {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	id := claims["username"].(string)
+	return id
+}
